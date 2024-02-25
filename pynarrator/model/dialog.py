@@ -7,6 +7,7 @@ from typing import Iterator, Any, Generator
 
 from config import Config
 
+
 @dataclass
 class DialogNode:
     "represent an in game dialog"
@@ -15,17 +16,19 @@ class DialogNode:
     text: str
     image: str
 
-    options: dict[str, "DialogOption"] = field(default_factory=dict)
+    # options: dict[str, "DialogOption"] = field(default_factory=dict)
+    options: list["DialogOption"] = field(default_factory=list)
 
     def __str__(self) -> str:
-        opts = '\n\t'.join(map(str, self.options.values()))
+        opts = "\n\t".join(map(str, self.options))
         return f"[DIALOG {self.label!r}]:\n{self.text}\n\t{opts}"
+
 
 @dataclass
 class DialogOption:
     "represent an option of a given dialog"
 
-    label : str
+    label: str
     text: str
 
     def __str__(self) -> str:
@@ -39,7 +42,7 @@ def load_tomls(dir: str) -> Iterator[dict]:
 
     for file in dir_path.rglob("*.toml"):
         # read toml file
-        with open(file, 'rb') as fp:
+        with open(file, "rb") as fp:
             dialog = tomllib.load(fp)
         yield dialog
 
@@ -48,32 +51,44 @@ def parse_option(opt: dict) -> DialogOption:
     "parse a toml item into a DialogOption"
     return DialogOption(label=opt.pop("label"), text=opt.pop("text"))
 
+
 def parse_dialog(dialog: dict[str, Any]) -> DialogNode | None:
     "tries to parse a toml object into DialogNode, returns None in case of error"
     try:
-        node = DialogNode(label=dialog.pop("label"), text=dialog.pop("text"), image=dialog.pop("image"), )
-        options = [parse_option(opt)  for label, opt in dialog.items()]
-        node.options = {option.label:option for option in options}
+        node = DialogNode(
+            label=dialog.pop("label"),
+            text=dialog.pop("text"),
+            image=dialog.pop("image"),
+        )
+        node.options = [parse_option(opt) for label, opt in dialog.items()]
+        # node.options = {option.label: option for option in options}
         return node
     except (ValueError, KeyError):
         return None
 
+
 def validate_dialogs(dialogs: dict[str, DialogNode]):
     "checks if all dialog options point to an existing dialog node"
-    return all(option.label in dialogs.keys() for dialog in dialogs.values() for option in dialog.options.values())
+    return all(
+        option.label in dialogs.keys()
+        for dialog in dialogs.values()
+        for option in dialog.options
+    )
 
-def load_dialogs(config : Config):
+
+def load_dialogs(config: Config):
     "load dialogs from the config"
     # load dialog files
     tomls = load_tomls(config.dialog_path)
     # try to parse toml files into a dialog object
     dialogs = filter(None, map(parse_dialog, tomls))
-    dialog_map = {d.label:d for d in dialogs}
-    
+    dialog_map = {d.label: d for d in dialogs}
+
     # validated dialogs
     assert validate_dialogs(dialog_map), "Dialog missing in tomls files"
     # TODO: function here to translate text
     return dialog_map
+
 
 def walk_dialog(dialogs: dict[str, DialogNode], start: str = "root") -> Generator:
     "genrator that walks the dialog graph, given a next node to visit if yield the node and the walinkg history"
@@ -86,7 +101,10 @@ def walk_dialog(dialogs: dict[str, DialogNode], start: str = "root") -> Generato
             yield (node, breadcrumbs)
             break
         current = yield (node, breadcrumbs)
-        assert current in (opt for opt in node.options), "Select option in not avalible for this node"
+        assert current in (
+            opt.label for opt in node.options
+        ), "Select option in not avalible for this node"
+
 
 class DialogFacade:
     "encapsulates the dialog graph behavior"
@@ -114,6 +132,10 @@ class DialogFacade:
     @property
     def current_text(self) -> DialogNode:
         return self._current.text
+
+    @property
+    def current_img(self) -> DialogNode:
+        return self._current.image
 
     @property
     def current_options(self) -> DialogNode:
