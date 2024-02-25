@@ -1,0 +1,12 @@
+label = "continuar_pedido"
+text = "Gostaria de mais alguma coisa?"
+image = "img/img.jpg"
+
+[A]
+label = "pedir_menu"
+text = "Gostaria de olhar o menu."
+
+[B]
+label = "esperar"
+text = "Por enquanto não."
+

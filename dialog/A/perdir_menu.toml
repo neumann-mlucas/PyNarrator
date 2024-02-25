@@ -1,0 +1,16 @@
+label = "pedir_menu"
+text = "Aqui está o menu. O que deseja pedir?"
+image = "img/img.jpg"
+
+[A]
+label = "pedir_bebida_menu"
+text = "Gostaria de algo para beber, por favor."
+
+[B]
+label = "pedir_comida"
+text = "Vou pedir..."
+
+[C]
+label = "sugestao"
+text = "O que você recomenda?"
+

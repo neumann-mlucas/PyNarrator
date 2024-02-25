@@ -1,0 +1,16 @@
+label = "pedir_bebida"
+text = "Ótimo, o que você deseja?"
+image = "img/img.jpg"
+
+[A]
+label = "continuar_pedido"
+text = "Uma água está ótimo"
+
+[B]
+label = "continuar_pedido"
+text = "Vou querer uma cerveja, por favor."
+
+[C]
+label = "continue_pedido"
+text = "Me traz um vinho da casa."
+

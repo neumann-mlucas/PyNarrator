@@ -1,0 +1,15 @@
+label = "chamar_garcon"
+text = "Boa noite! Como posso lhe ajudar"
+image = "img/img.jpg"
+
+[A]
+label = "pedir_menu"
+text = "Pode me trazer o menu."
+
+[B]
+label = "pedir_bebida"
+text = "Gostaria de pedir uma bebida."
+
+[C]
+label = "esperar"
+text = "Desculpe, vou esperar mais um pouco"

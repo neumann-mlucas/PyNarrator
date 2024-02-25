@@ -1,0 +1,13 @@
+label = "pedir_comida"
+text = "O que deseja pedir?"
+image = "img/img.jpg"
+
+[A]
+label = "end"
+text = "Vou pedir o prato do dia."
+
+[B]
+label = "end"
+text = "Quero a Carbonara"
+
+
