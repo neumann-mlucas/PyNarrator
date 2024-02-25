@@ -3,7 +3,7 @@ text = "Boa noite! Bem-vindo ao nosso restaurante. Posso lhe oferecer o menu?"
 image = "img/img.jpg"
 
 [A]
-label = "perdir_menu"
+label = "pedir_menu"
 text = "Sim, por favor."
 
 [B]
@@ -13,4 +13,3 @@ text = "Na verdade, estou aqui apenas para uma bebida no momento."
 [C]
 label = "esperar"
 text = "Ainda não estou pronto para pedir. Pode me dar mais um momento?"
-

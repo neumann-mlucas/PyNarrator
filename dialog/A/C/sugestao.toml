@@ -4,7 +4,7 @@ image = "img/img.jpg"
 
 [A]
 label = "end"
-text = "Ok, vou pedir este mesmo.""
+text = "Ok, vou pedir este mesmo."
 
 [B]
 label = "pedir_comida"

@@ -2,7 +2,6 @@ label = "esperar"
 text = "Claro, sem pressa. Volto em alguns minutos para pegar seu pedido."
 image = "img/img.jpg"
 
-
 [A]
 label = "esperar"
 text = "[Continue esperando...]"
@@ -10,4 +9,3 @@ text = "[Continue esperando...]"
 [B]
 label = "chamar_garcon"
 text = "[Chame o garcon]"
-

@@ -11,6 +11,5 @@ label = "continuar_pedido"
 text = "Vou querer uma cerveja, por favor."
 
 [C]
-label = "continue_pedido"
+label = "continuar_pedido"
 text = "Me traz um vinho da casa."
-
