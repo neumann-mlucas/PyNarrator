@@ -1,6 +1,6 @@
 label = "root"
 text = "Boa noite! Bem-vindo ao nosso restaurante. Posso lhe oferecer o menu?"
-image = "img/img.jpg"
+image = "waiter.png"
 
 [A]
 label = "pedir_menu"

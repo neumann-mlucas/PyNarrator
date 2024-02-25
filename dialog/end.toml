@@ -1,3 +1,8 @@
 label = "end"
-text = "[O garçon anota seu pedido e se afasta da mesa.]"
-image = "img/img.jpg"
+text = "[O garçon anota seu pedido e se afasta da mesa...]"
+image = "no_waiter.png"
+
+
+[A]
+label = "root"
+text = "Fim do Jogo, voltar ao inicio?"

@@ -1,6 +1,6 @@
 label = "pedir_comida"
 text = "O que deseja pedir?"
-image = "img/img.jpg"
+image = "menu.png"
 
 [A]
 label = "end"

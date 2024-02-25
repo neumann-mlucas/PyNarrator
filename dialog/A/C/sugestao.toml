@@ -1,6 +1,6 @@
 label = "sugestao"
 text = "Nossa especialidade hoje é o risoto salmão. É excelente!"
-image = "img/img.jpg"
+image = "menu.png"
 
 [A]
 label = "end"

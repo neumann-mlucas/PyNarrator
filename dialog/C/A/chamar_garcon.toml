@@ -1,6 +1,6 @@
 label = "chamar_garcon"
 text = "Boa noite! Como posso lhe ajudar"
-image = "img/img.jpg"
+image = "waiter.png"
 
 [A]
 label = "pedir_menu"

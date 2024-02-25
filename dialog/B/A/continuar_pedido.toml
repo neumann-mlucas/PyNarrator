@@ -1,6 +1,6 @@
 label = "continuar_pedido"
 text = "Gostaria de mais alguma coisa?"
-image = "img/img.jpg"
+image = "waiter.png"
 
 [A]
 label = "pedir_menu"
