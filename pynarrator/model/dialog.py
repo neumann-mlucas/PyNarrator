@@ -130,15 +130,15 @@ class DialogFacade:
         return deepcopy(self._history)
 
     @property
-    def current_text(self) -> DialogNode:
+    def current_text(self) -> str:
         return self._current.text
 
     @property
-    def current_img(self) -> DialogNode:
+    def current_img(self) -> str:
         return self._current.image
 
     @property
-    def current_options(self) -> DialogNode:
+    def current_options(self) -> list[DialogOption]:
         return deepcopy(self._current.options)
 
     def reset(self) -> None:
