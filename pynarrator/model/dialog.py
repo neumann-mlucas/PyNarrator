@@ -6,6 +6,9 @@ from pathlib import Path
 from typing import Iterator, Any, Generator
 
 from config import Config
+from logger import get_logger
+
+logger = get_logger()
 
 
 @dataclass
@@ -16,7 +19,6 @@ class DialogNode:
     text: str
     image: str
 
-    # options: dict[str, "DialogOption"] = field(default_factory=dict)
     options: list["DialogOption"] = field(default_factory=list)
 
     def __str__(self) -> str:
@@ -35,59 +37,71 @@ class DialogOption:
         return f"<OPTION : {self.label!r}>: {self.text}"
 
 
-def load_tomls(dir: str) -> Iterator[dict]:
-    "givem a directory, reads all toml files and yield each one of then"
-    dir_path = Path(dir)
-    assert dir_path.exists(), f"Dialog directory {dir!r} doesn't exist"
+class LoadDialogs:
+    "function pipeline to read tomls files and parse then into a dialog graph"
 
-    for file in dir_path.rglob("*.toml"):
-        # read toml file
-        with open(file, "rb") as fp:
-            dialog = tomllib.load(fp)
-        yield dialog
+    @staticmethod
+    def load_tomls(dir: str) -> Iterator[dict]:
+        "givem a directory, reads all toml files and yield each one of then"
+        dir_path = Path(dir)
+        assert dir_path.exists(), f"Dialog directory {dir!r} doesn't exist"
 
+        for file in dir_path.rglob("*.toml"):
+            # read toml file
+            try:
+                with open(file, "rb") as fp:
+                    dialog = tomllib.load(fp)
+                yield dialog
+            except (tomllib.TOMLDecodeError, FileNotFoundError, PermissionError) as exp:
+                logger.error(f"Error {exp} while reading {file}")
+                continue
 
-def parse_option(opt: dict) -> DialogOption:
-    "parse a toml item into a DialogOption"
-    return DialogOption(label=opt.pop("label"), text=opt.pop("text"))
+    @staticmethod
+    def parse_option(opt: dict) -> DialogOption:
+        "parse a toml item into a DialogOption"
+        return DialogOption(label=opt.pop("label"), text=opt.pop("text"))
 
+    @classmethod
+    def parse_dialog(cls, dialog: dict[str, Any]) -> DialogNode | None:
+        "tries to parse a toml object into DialogNode, returns None in case of error"
+        try:
+            node = DialogNode(
+                label=dialog.pop("label"),
+                text=dialog.pop("text"),
+                image=dialog.pop("image"),
+            )
+            node.options = [cls.parse_option(opt) for label, opt in dialog.items()]
+            return node
+        except (ValueError, KeyError) as exp:
+            logger.error(f"Error {exp} when parsing {dialog}")
+            return None
 
-def parse_dialog(dialog: dict[str, Any]) -> DialogNode | None:
-    "tries to parse a toml object into DialogNode, returns None in case of error"
-    try:
-        node = DialogNode(
-            label=dialog.pop("label"),
-            text=dialog.pop("text"),
-            image=dialog.pop("image"),
-        )
-        node.options = [parse_option(opt) for label, opt in dialog.items()]
-        # node.options = {option.label: option for option in options}
-        return node
-    except (ValueError, KeyError):
-        return None
+    @staticmethod
+    def validate_dialogs(dialogs: dict[str, DialogNode]) -> None:
+        "checks if all dialog options point to an existing dialog node"
+        missing_labels = [
+            option.label
+            for dialog in dialogs.values()
+            for option in dialog.options
+            if option.label not in dialogs.keys()
+        ]
+        if missing_labels:
+            raise Exception(f"Missing Dialog Nodes : {missing_labels}")
 
+    @classmethod
+    def run(cls, config: Config) -> dict[str, DialogNode]:
+        "load dialogs from the config"
+        # load dialog files
+        tomls = cls.load_tomls(config.dialog_path)
+        # try to parse toml files into a dialog graph
+        dialog_map = {
+            dialog.label: dialog for dialog in map(cls.parse_dialog, tomls) if dialog
+        }
+        # validated dialogs
+        cls.validate_dialogs(dialog_map)
 
-def validate_dialogs(dialogs: dict[str, DialogNode]):
-    "checks if all dialog options point to an existing dialog node"
-    return all(
-        option.label in dialogs.keys()
-        for dialog in dialogs.values()
-        for option in dialog.options
-    )
-
-
-def load_dialogs(config: Config):
-    "load dialogs from the config"
-    # load dialog files
-    tomls = load_tomls(config.dialog_path)
-    # try to parse toml files into a dialog object
-    dialogs = filter(None, map(parse_dialog, tomls))
-    dialog_map = {d.label: d for d in dialogs}
-
-    # validated dialogs
-    assert validate_dialogs(dialog_map), "Dialog missing in tomls files"
-    # TODO: function here to translate text
-    return dialog_map
+        # TODO: function here to translate text
+        return dialog_map
 
 
 def walk_dialog(dialogs: dict[str, DialogNode], start: str = "root") -> Generator:
@@ -110,7 +124,7 @@ class DialogFacade:
     "encapsulates the dialog graph behavior"
 
     def __init__(self, config, start="root"):
-        self._dialogs = load_dialogs(Config)
+        self._dialogs = LoadDialogs.run(config)
         self._walker = walk_dialog(self._dialogs, start)
         self._current, self._history = next(self._walker)
 
@@ -125,9 +139,9 @@ class DialogFacade:
         return deepcopy(self._current)
 
     @property
-    def history(self) -> list[str]:
+    def history(self) -> tuple[str]:
         "get history of nodes visited"
-        return deepcopy(self._history)
+        return tuple(self._history)
 
     @property
     def current_text(self) -> str:
