@@ -111,9 +111,6 @@ def walk_dialog(dialogs: dict[str, DialogNode], start: str = "root") -> Generato
         node = dialogs[current]
         breadcrumbs.append(current)
 
-        if current == "end":
-            yield (node, breadcrumbs)
-            break
         current = yield (node, breadcrumbs)
         assert current in (
             opt.label for opt in node.options
