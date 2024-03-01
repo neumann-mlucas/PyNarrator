@@ -33,3 +33,21 @@ class GameView(BaseView):
         self.text = self.model.current_text
         self.options = [option.text for option in self.model.current_options]
         self.option_labels = [option.label for option in self.model.current_options]
+
+    def render(self) -> None:
+        "draws all text the is display in the screen"
+        self.screen.blit(self.background_image, (0, 0))
+
+        self.update_text()
+        self.draw_text()
+
+        # created clickable rectangles in a loop
+        self.option_rects.clear()
+        for i, option in enumerate(self.options):
+            rect = self.draw_choises(option, (int(self.screen_width / 2), 250 + i * 50))
+            self.option_rects.append(rect)
+
+        rect = self.draw_choises(
+            "Back to Main Menu", (int(self.screen_width / 2), self.screen_height - 50)
+        )
+        self.option_rects.append(rect)
