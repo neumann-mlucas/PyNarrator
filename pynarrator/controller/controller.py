@@ -1,14 +1,17 @@
 import sys
 import pygame
+import json
 
 from enum import Enum
+from pathlib import Path
 from typing import Callable
 
 from pygame.event import Event
 
+from config import Config
 from model.dialog import DialogFacade
-from view.menu import MenuView
 from view.game import GameView
+from view.menu import MenuView
 
 
 class GameState(Enum):
@@ -17,17 +20,16 @@ class GameState(Enum):
 
 
 class BaseController:
-    "a base class for game controllers, providing common functionality and interface"
+    """
+    a base class for game controllers, providing common functionality and interface
+    - attributes "state" and "options_callbacks" need to be set by the children class
+    """
 
-    def __init__(self, model: DialogFacade, view: MenuView) -> None:
+    def __init__(self, config: Config, model: DialogFacade, view: MenuView) -> None:
+        self.config = config
         self.model = model
         self.view = view
         self.update_callbacks()
-
-    @property
-    def state(self) -> None:
-        "returns game state, used to change screens in game"
-        return self._state
 
     def update_callbacks(self) -> None:
         "sets up callbacks for handling events. should be overridden in subclasses"
@@ -35,7 +37,6 @@ class BaseController:
 
     def handle_events(self, event: Event) -> None:
         "handles click events and call the appropriated callback function"
-        print(type(event), event)
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             mouse_pos = event.pos
             for i, rect in enumerate(self.view.option_rects):
@@ -47,9 +48,9 @@ class BaseController:
 class MenuController(BaseController):
     "controller for the main menu, handling user interactions within the menu"
 
-    def __init__(self, model: DialogFacade, view: MenuView) -> None:
-        super().__init__(model, view)
-        self._state = GameState.Menu
+    def __init__(self, config: Config, model: DialogFacade, view: MenuView) -> None:
+        super().__init__(config, model, view)
+        self.state: GameState = GameState.Menu
 
     def update_callbacks(self) -> None:
         "start, load and exit menu button callbacks"
@@ -57,12 +58,26 @@ class MenuController(BaseController):
 
     def start_game(self) -> None:
         "change game state"
-        print(self._state)
-        self._state = GameState.Game
+        self.model.reset()
+        self.state = GameState.Game
 
     def load_game(self) -> None:
         "loads save game"
-        pass
+        self.state = GameState.Game
+
+        # check if save game exists
+        path = Path(self.config.save_path) / "save.json"
+        if not path.exists():
+            return
+
+        # load save
+        with open(path, "r") as fp:
+            history = json.load(fp)
+
+        # advance game state using history
+        self.model.reset()
+        for label in history[1:]:
+            self.model.next(label)
 
     def exit(self) -> None:
         "exits game"
@@ -73,15 +88,16 @@ class MenuController(BaseController):
 class GameController(BaseController):
     "controller for the game state, handling user interactions during gameplay"
 
-    def __init__(self, model: DialogFacade, view: GameView) -> None:
-        super().__init__(model, view)
-        self._state = GameState.Game
+    def __init__(self, config: Config, model: DialogFacade, view: GameView) -> None:
+        super().__init__(config, model, view)
+        self.state: GameState = GameState.Game
 
     def update_callbacks(self):
         "sets up callbacks for each dialog option in the game view"
         self.options_callbacks = [
             self.chose_nth_option(i) for i, _ in enumerate(self.model.current_options)
         ]
+        self.options_callbacks.append(self.goto_menu)
 
     def chose_nth_option(self, n: int) -> Callable:
         "helper function / clousure for advancing the dialog based on a clicked event"
@@ -91,3 +107,15 @@ class GameController(BaseController):
             self.model.next(label)
 
         return chose
+
+    def goto_menu(self):
+        "save game state and go to menu"
+        history = self.model.history
+        self.save_game(history)
+        self.state = GameState.Menu
+
+    def save_game(self, history: list[str]) -> None:
+        "save game state as a history if the nodes visited"
+        path = Path(self.config.save_path) / "save.json"
+        with open(path, "w") as fp:
+            json.dump(history, fp)

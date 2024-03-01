@@ -29,10 +29,10 @@ def main():
 
     # Initialize components
     menu_view = MenuView(config, model, screen)
-    menu_controller = MenuController(model, menu_view)
+    menu_controller = MenuController(config, model, menu_view)
 
     game_view = GameView(config, model, screen)
-    game_controller = GameController(model, game_view)
+    game_controller = GameController(config, model, game_view)
 
     # Main loop
     running = True
@@ -42,15 +42,20 @@ def main():
         for event in events:
             if event.type == pygame.QUIT:
                 running = False
-
+                break
             elif current_state == GameState.Menu:
-                menu_controller.handle_events(event)
-                current_state = menu_controller.state
-                menu_view.render()
+                controller = menu_controller
             elif current_state == GameState.Game:
-                game_controller.handle_events(event)
-                current_state = game_controller.state
-                game_view.render()
+                controller = game_controller
+
+            # sync controler state and current_state variable
+            controller.state = current_state
+            # send event to the controller
+            controller.handle_events(event)
+            # update current_state variable state
+            current_state = controller.state
+            # render screen
+            controller.view.render()
 
         pygame.display.flip()
 
