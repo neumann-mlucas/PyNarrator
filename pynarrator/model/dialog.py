@@ -167,9 +167,9 @@ class DialogFacade:
 
     def load(self, history: list[str]) -> None:
         "reset game state and advance it using history"
-        self.model.reset()
+        self.reset()
         for label in history[1:]:
-            self.model.next(label)
+            self.next(label)
 
     def reload_config(self, config: Config) -> None:
         "reload config - used to change language setting"
