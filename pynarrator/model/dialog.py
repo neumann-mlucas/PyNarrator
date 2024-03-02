@@ -1,7 +1,9 @@
 import tomllib
+import json
 
 from copy import deepcopy
 from dataclasses import field, dataclass
+from itertools import chain
 from pathlib import Path
 from typing import Iterator, Any, Generator
 
@@ -41,18 +43,23 @@ class LoadDialogs:
     "function pipeline to read tomls files and parse then into a dialog graph"
 
     @staticmethod
-    def load_tomls(dir: str) -> Iterator[dict]:
+    def load_tomls(dir_path: Path) -> Iterator[dict]:
         "givem a directory, reads all toml files and yield each one of then"
-        dir_path = Path(dir)
         assert dir_path.exists(), f"Dialog directory {dir!r} doesn't exist"
 
-        for file in dir_path.rglob("*.toml"):
-            # read toml file
+        files = chain(dir_path.rglob("*.toml"), dir_path.rglob("*.json"))
+        for file in files:
+            # find if file is json or toml
+            loader = tomllib.load if file.suffix == "tmol" else json.load
             try:
                 with open(file, "rb") as fp:
-                    dialog = tomllib.load(fp)
+                    dialog = loader(fp)
                 yield dialog
-            except (tomllib.TOMLDecodeError, FileNotFoundError, PermissionError) as exp:
+            except (
+                json.JSONDecodeError,
+                tomllib.TOMLDecodeError,
+                PermissionError,
+            ) as exp:
                 logger.error(f"Error {exp} while reading {file}")
                 continue
 
@@ -92,7 +99,8 @@ class LoadDialogs:
     def run(cls, config: Config) -> dict[str, DialogNode]:
         "load dialogs from the config"
         # load dialog files
-        tomls = cls.load_tomls(config.dialog_path)
+        dialog_path = Path(config.dialog_path) / config.language
+        tomls = cls.load_tomls(dialog_path)
         # try to parse toml files into a dialog graph
         dialog_map = {
             dialog.label: dialog for dialog in map(cls.parse_dialog, tomls) if dialog
@@ -158,4 +166,11 @@ class DialogFacade:
         self._current, self._history = next(self._walker)
 
     def load(self, history: list[str]) -> None:
-        pass
+        "reset game state and advance it using history"
+        self.model.reset()
+        for label in history[1:]:
+            self.model.next(label)
+
+    def reload_config(self, config: Config) -> None:
+        "reload config - used to change language setting"
+        self.__init__(self, config)
