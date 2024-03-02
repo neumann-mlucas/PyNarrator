@@ -75,9 +75,7 @@ class MenuController(BaseController):
             history = json.load(fp)
 
         # advance game state using history
-        self.model.reset()
-        for label in history[1:]:
-            self.model.next(label)
+        self.model.load(history)
 
     def exit(self) -> None:
         "exits game"
