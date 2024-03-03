@@ -49,7 +49,6 @@ class LoadDialogs:
 
         files = chain(dir_path.rglob("*.toml"), dir_path.rglob("*.json"))
         for file in files:
-            print(file)
             # find if file is json or toml
             loader = tomllib.load if file.suffix == "tmol" else json.load
             try:

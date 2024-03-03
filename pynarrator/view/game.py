@@ -3,7 +3,7 @@ import pygame
 from pathlib import Path
 
 from config import Config
-from model.dialog import DialogFacade
+from model import DialogFacade
 from view.base import BaseView
 
 

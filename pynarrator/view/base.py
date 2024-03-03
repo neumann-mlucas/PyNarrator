@@ -2,7 +2,7 @@ import pygame
 
 from pathlib import Path
 
-from model.dialog import DialogFacade
+from model import DialogFacade
 
 from config import Config
 

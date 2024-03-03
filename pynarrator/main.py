@@ -1,17 +1,15 @@
 import pygame
 
 from config import Config
-from controller.controller import (
+from controller import (
     GameController,
     MenuController,
     GameState,
     LanguageMenuController,
 )
 
-from model.dialog import DialogFacade
-from view.game import GameView
-from view.menu import MenuView
-from view.language_menu import LanguageMenuView
+from model import DialogFacade
+from view import GameView, MenuView, LanguageMenuView
 
 
 def init_screen(config: Config):
