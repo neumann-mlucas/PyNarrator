@@ -45,7 +45,7 @@ class LoadDialogs:
     @staticmethod
     def load_tomls(dir_path: Path) -> Iterator[dict]:
         "givem a directory, reads all toml files and yield each one of then"
-        assert dir_path.exists(), f"Dialog directory {dir!r} doesn't exist"
+        assert dir_path.exists(), f"Dialog directory {dir_path!r} doesn't exist"
 
         files = chain(dir_path.rglob("*.toml"), dir_path.rglob("*.json"))
         for file in files:
