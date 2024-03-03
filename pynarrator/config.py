@@ -12,5 +12,5 @@ class Config:
     width: int = 640
     height: int = 480
 
-    languages = ("en", "pt", "ge")
-    language = "pt"
+    languages = ("english", "portuguese", "german")
+    language = "portuguese"
