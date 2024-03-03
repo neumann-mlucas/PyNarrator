@@ -17,6 +17,7 @@ from view.menu import MenuView
 class GameState(Enum):
     Menu = 1
     Game = 2
+    LanguageMenu = 3
 
 
 class BaseController:
@@ -54,7 +55,12 @@ class MenuController(BaseController):
 
     def update_callbacks(self) -> None:
         "start, load and exit menu button callbacks"
-        self.options_callbacks = [self.start_game, self.load_game, self.exit]
+        self.options_callbacks = [
+            self.start_game,
+            self.load_game,
+            self.chose_language,
+            self.exit,
+        ]
 
     def start_game(self) -> None:
         "change game state"
@@ -77,10 +83,44 @@ class MenuController(BaseController):
         # advance game state using history
         self.model.load(history)
 
+    def chose_language(self) -> None:
+        "goto language menu"
+        self.state = GameState.LanguageMenu
+
     def exit(self) -> None:
         "exits game"
         pygame.quit()
         sys.exit()
+
+
+class LanguageMenuController(BaseController):
+    "controller for the main menu, handling user interactions within the menu"
+
+    def __init__(self, config: Config, model: DialogFacade, view: MenuView) -> None:
+        super().__init__(config, model, view)
+        self.state: GameState = GameState.LanguageMenu
+
+    def update_callbacks(self):
+        "sets up callbacks for each languages in the menu"
+        self.options_callbacks = [
+            self.chose_language(i) for i, _ in enumerate(self.config.languages)
+        ] + [self.goto_menu]
+
+    def chose_language(self, n: int) -> Callable:
+        "helper function / clousure for choosing a language based on a clicked event"
+
+        def chose():
+            lang = self.config.languages[n]
+            self.config.language = lang
+            self.model.reload_config(self.config)
+            # go to menu after choosing
+            self.state: GameState = GameState.Menu
+
+        return chose
+
+    def goto_menu(self):
+        "save game state and go to menu"
+        self.state = GameState.Menu
 
 
 class GameController(BaseController):

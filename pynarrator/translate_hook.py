@@ -1,6 +1,7 @@
 import tomllib
 
 from config import Config
+
 from deep_translator import GoogleTranslator
 import json
 from typing import Any
@@ -14,12 +15,12 @@ logger = get_logger()
 
 
 class TranslateDialogs:
-    def __init__(self, config: Config, target_language: str = "en") -> None:
-        self.source_language = "pt"
+    def __init__(self, config: Config, target_language: str) -> None:
+        self.source_language = "portuguese"
         self.target_language = target_language
 
         self.translator = GoogleTranslator(
-            source=self.source_language, trarget=self.target_language
+            source=self.source_language, target=self.target_language
         )
 
         assert Path(config.source_dialog_path).exists()
@@ -31,7 +32,7 @@ class TranslateDialogs:
     def translate_dialog(self, dialog: dict) -> dict:
         return dict(self.translate_key_value(k, v) for k, v in dialog.items())
 
-    def translate_key_value(self, key: str, value: Any) -> dict:
+    def translate_key_value(self, key: str, value: Any) -> tuple[str, Any]:
         match key, value:
             case "text", str():
                 return key, self.translator.translate(value)
@@ -40,7 +41,7 @@ class TranslateDialogs:
                     self.translate_key_value(k, v) for k, v in value.items()
                 )
                 return (key, translated_dict)
-            case _, _:
+            case _:
                 return key, value
 
     def load_dialogs(self) -> Iterator[dict]:
@@ -77,7 +78,6 @@ class TranslateDialogs:
 def main():
     config = Config()
     for lang in config.languages:
-        print(lang)
         TranslateDialogs(config, lang).run()
 
 
