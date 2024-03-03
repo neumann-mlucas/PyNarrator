@@ -11,4 +11,4 @@ class MenuView(BaseView):
     def __init__(self, config: Config, model: DialogFacade, screen) -> None:
         super().__init__(config, model, screen)
         self.text = "TEST GAME"
-        self.options = ["Start Game", "Load Game", "Exit"]
+        self.options = ["Start Game", "Load Game", "Language Settings", "Exit"]

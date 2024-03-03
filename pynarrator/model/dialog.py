@@ -49,6 +49,7 @@ class LoadDialogs:
 
         files = chain(dir_path.rglob("*.toml"), dir_path.rglob("*.json"))
         for file in files:
+            print(file)
             # find if file is json or toml
             loader = tomllib.load if file.suffix == "tmol" else json.load
             try:
@@ -173,4 +174,4 @@ class DialogFacade:
 
     def reload_config(self, config: Config) -> None:
         "reload config - used to change language setting"
-        self.__init__(self, config)
+        self.__init__(config)
