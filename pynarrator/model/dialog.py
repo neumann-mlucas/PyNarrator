@@ -1,11 +1,10 @@
-import tomllib
 import json
-
+import tomllib
 from copy import deepcopy
-from dataclasses import field, dataclass
+from dataclasses import dataclass, field
 from itertools import chain
 from pathlib import Path
-from typing import Iterator, Any, Generator
+from typing import Any, Generator, Iterator
 
 from config import Config
 from logger import get_logger

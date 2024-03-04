@@ -1,7 +1,6 @@
-import pygame
-
 from pathlib import Path
 
+import pygame
 from config import Config
 from model import DialogFacade
 from view.base import BaseView

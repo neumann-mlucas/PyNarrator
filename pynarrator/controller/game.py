@@ -1,13 +1,11 @@
 import json
-
 from pathlib import Path
 from typing import Callable
 
-
 from config import Config
+from controller.base import BaseController, GameState
 from model import DialogFacade
 from view import GameView
-from controller.base import BaseController, GameState
 
 
 class GameController(BaseController):

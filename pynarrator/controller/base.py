@@ -1,11 +1,9 @@
-import pygame
-
 from enum import Enum
 
-from pygame.event import Event
-
+import pygame
 from config import Config
 from model import DialogFacade
+from pygame.event import Event
 from view import MenuView
 
 

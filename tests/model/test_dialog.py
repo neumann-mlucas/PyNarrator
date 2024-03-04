@@ -1,13 +1,6 @@
 import unittest
 
-from model.dialog import (
-    LoadDialogs,
-    # parse_option,
-    # parse_dialog,
-    # validate_dialogs,
-    DialogNode,
-    DialogOption,
-)
+from model.dialog import DialogNode, DialogOption, LoadDialogs
 
 
 class TestDialogModel(unittest.TestCase):
