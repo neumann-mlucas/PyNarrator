@@ -15,7 +15,7 @@ class GameController(BaseController):
         super().__init__(config, model, view)
         self.state: GameState = GameState.Game
 
-    def update_callbacks(self):
+    def update_callbacks(self) -> None:
         "sets up callbacks for each dialog option in the game view"
         self.options_callbacks = [
             self.chose_nth_option(i) for i, _ in enumerate(self.model.current_options)
@@ -25,15 +25,15 @@ class GameController(BaseController):
     def chose_nth_option(self, n: int) -> Callable:
         "helper function / clousure for advancing the dialog based on a clicked event"
 
-        def chose():
+        def chose() -> None:
             label = self.view.option_labels[n]
             self.model.next(label)
 
         return chose
 
-    def goto_menu(self):
+    def goto_menu(self) -> None:
         "save game state and go to menu"
-        history = self.model.history
+        history = list(self.model.history)
         self.save_game(history)
         self.state = GameState.Menu
 

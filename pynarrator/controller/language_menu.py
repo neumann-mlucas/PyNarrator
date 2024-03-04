@@ -15,7 +15,7 @@ class LanguageMenuController(BaseController):
         super().__init__(config, model, view)
         self.state: GameState = GameState.LanguageMenu
 
-    def update_callbacks(self):
+    def update_callbacks(self) -> None:
         "sets up callbacks for each languages in the menu"
         self.options_callbacks = [
             self.chose_language(i) for i, _ in enumerate(self.config.languages)
@@ -33,6 +33,6 @@ class LanguageMenuController(BaseController):
 
         return chose
 
-    def goto_menu(self):
+    def goto_menu(self) -> None:
         "save game state and go to menu"
         self.state = GameState.Menu

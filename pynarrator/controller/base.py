@@ -4,7 +4,7 @@ import pygame
 from config import Config
 from model import DialogFacade
 from pygame.event import Event
-from view import MenuView
+from view import BaseView
 
 
 class GameState(Enum):
@@ -19,7 +19,7 @@ class BaseController:
     - attributes "state" and "options_callbacks" need to be set by the children class
     """
 
-    def __init__(self, config: Config, model: DialogFacade, view: MenuView) -> None:
+    def __init__(self, config: Config, model: DialogFacade, view: BaseView) -> None:
         self.config = config
         self.model = model
         self.view = view

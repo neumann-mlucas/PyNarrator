@@ -16,7 +16,6 @@ def main():
     "main game loop"
 
     # Initialize Config
-    # TODO: parse config options from somewhere
     config = Config()
 
     # Initialize pygame

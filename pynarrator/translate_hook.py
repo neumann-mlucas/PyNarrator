@@ -61,7 +61,7 @@ class TranslateDialogs:
         with open(filepath, "w") as fp:
             json.dump(dialog, fp)
 
-    def run(self):
+    def run(self) -> None:
         logger.info(f"> Starting Translation to {self.target_language}")
         for dialog in self.load_dialogs():
             translated = self.translate_dialog(dialog)

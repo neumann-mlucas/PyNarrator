@@ -30,5 +30,5 @@ class Config:
         self.save_path = os.path.join(base_path, "save")
         self.languages = self.get_languages()
 
-    def get_languages(self):
+    def get_languages(self) -> list[str]:
         return [p.name for p in Path(self.dialog_path).glob("*") if p.is_dir()]
