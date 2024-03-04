@@ -1,15 +1,9 @@
 import pygame
-
 from config import Config
-from controller import (
-    GameController,
-    MenuController,
-    GameState,
-    LanguageMenuController,
-)
-
+from controller import (GameController, GameState, LanguageMenuController,
+                        MenuController)
 from model import DialogFacade
-from view import GameView, MenuView, LanguageMenuView
+from view import GameView, LanguageMenuView, MenuView
 
 
 def init_screen(config: Config):
@@ -57,7 +51,6 @@ def main():
             elif current_state == GameState.LanguageMenu:
                 controller = language_controller
 
-            # print(controller.config)
             # sync controler state and current_state variable
             controller.state = current_state
             # send event to the controller

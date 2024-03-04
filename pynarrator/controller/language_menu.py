@@ -1,10 +1,9 @@
 from typing import Callable
 
-
 from config import Config
+from controller.base import BaseController, GameState
 from model import DialogFacade
 from view import LanguageMenuView
-from controller.base import BaseController, GameState
 
 
 class LanguageMenuController(BaseController):

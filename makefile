@@ -14,7 +14,11 @@ export PYNARRATOR_TRANS_DIALOG_PATH=./translated_dialog
 export PYNARRATOR_GAME_LANGUAGES="english,portuguese,spanish"
 
 build:
+	# install packages
+	poetry install
+	# run pre build hook to translated the dialogs
 	poetry run python hooks/hook-translate.py
+	# build the executable file
 	$(PYINSTALLER_CMD) $(SPEC_FILE)
 
 clean:

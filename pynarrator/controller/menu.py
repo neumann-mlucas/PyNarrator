@@ -1,14 +1,12 @@
-import sys
-import pygame
 import json
-
+import sys
 from pathlib import Path
 
-
+import pygame
 from config import Config
+from controller.base import BaseController, GameState
 from model import DialogFacade
 from view import MenuView
-from controller.base import BaseController, GameState
 
 
 class MenuController(BaseController):

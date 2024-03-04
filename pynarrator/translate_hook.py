@@ -1,14 +1,11 @@
+import json
 import tomllib
+from pathlib import Path
+from typing import Any, Iterator
 
 from config import Config
-
 from deep_translator import GoogleTranslator
-import json
-from typing import Any
 from logger import get_logger
-from typing import Iterator
-
-from pathlib import Path
 
 dir_path = Path("/home/neumann/Desktop/oppaiman/dialog")
 logger = get_logger()
