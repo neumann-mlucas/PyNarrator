@@ -2,7 +2,7 @@ import argparse
 
 import PyInstaller.__main__
 
-from hooks import hook_translate
+from hooks import hook_resizer, hook_translate
 
 
 def build_with_pyinstaller(args):
@@ -73,6 +73,9 @@ def main():
 
     # Run Translation Hook
     hook_translate.main(args)
+
+    # Run Resize Hook
+    hook_resizer.main(args)
 
     # run PyInstaller
     build_with_pyinstaller(args)

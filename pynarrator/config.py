@@ -8,7 +8,10 @@ from pathlib import Path
 class Config:
     source_dialog_path: str = "./dialog"
     dialog_path: str = "./translated_dialog"
-    image_path: str = "./img"
+
+    source_image_path: str = "./img"
+    image_path: str = "./resized_img"
+
     save_path: str = "./save"
 
     width: int = 640
@@ -26,7 +29,10 @@ class Config:
 
         self.source_dialog_path = os.path.join(base_path, "dialog")
         self.dialog_path = os.path.join(base_path, "translated_dialog")
-        self.image_path = os.path.join(base_path, "img")
+
+        self.source_image_path = os.path.join(base_path, "img")
+        self.image_path = os.path.join(base_path, "resized_img")
+
         self.save_path = os.path.join(base_path, "save")
         self.languages = self.get_languages()
 
