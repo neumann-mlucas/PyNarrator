@@ -14,8 +14,8 @@ class Config:
 
     save_path: str = "./save"
 
-    width: int = 640
-    height: int = 480
+    width: int = 1208
+    height: int = 720
 
     languages = ["english", "portuguese", "german"]
     language = "portuguese"
@@ -26,6 +26,11 @@ class Config:
             base_path = sys._MEIPASS
         except AttributeError:
             return
+
+        # import time
+        #
+        # print(sys._MEIPASS)
+        # time.sleep(300)
 
         self.source_dialog_path = os.path.join(base_path, "dialog")
         self.dialog_path = os.path.join(base_path, "translated_dialog")

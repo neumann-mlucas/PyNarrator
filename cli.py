@@ -15,6 +15,7 @@ def build_with_pyinstaller(args):
             f"--add-data={args.img_dir}:img",
             "--add-data=save:save",
             "--add-data=translated_dialog:translated_dialog",
+            "--add-data=resized_img:resized_img",
             "--onefile",
             "--windowed",
         ]
