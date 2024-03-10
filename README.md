@@ -14,9 +14,9 @@ PyNarrator is a dialogue-based game created as a coding challenge for a job inte
 
 ## TODO
 
-- **Capture User Input**: A new view/controller class is needed. Due to time constraints, this feature was not implemented.
-- **Image Resolution Build Option**: Implementation would follow a similar approach to the translation hook. This feature was not completed on time.
-- **CLI Interface for Build Options**: Currently relies on a makefile for build configurations.
+- [ ] **Capture User Input**: A new view/controller class is needed. Due to time constraints, this feature was not implemented.
+- [x] **Image Resolution Build Option**: Implementation would follow a similar approach to the translation hook. This feature was not completed on time.
+- [x] **CLI Interface for Build Options**: Currently relies on a makefile for build configurations.
 
 ## Prerequisites
 
@@ -31,7 +31,26 @@ PyNarrator is a dialogue-based game created as a coding challenge for a job inte
 ```bash
 git clone https://github.com/neumann-mlucas/PyNarrator.git
 cd PyNarrator
-make build
+
+# setup virtual env
+poetry install
+poetry shell
+
+# build game
+python cli.py pynarrator/main.py --output_name PyNarrator
+```
+
+### Build Options
+
+```bash
+# support different languages
+python cli.py pynarrator/main.py --languages=english,german
+
+# support a different resolution 
+python cli.py pynarrator/main.py --resolution=fullhd
+
+# build with different source dialog
+python cli.py pynarrator/main.py --dialog_dir=./dialog
 ```
 
 ## Usage
@@ -39,8 +58,7 @@ make build
 To launch the game, execute:
 
 ```bash
-make run
-# or directly run the executable file
+# executable file in the distribution folder
 ./dist/PyNarrator
 ```
 
