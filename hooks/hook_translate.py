@@ -8,13 +8,9 @@ from typing import Any, Iterator
 
 from deep_translator import GoogleTranslator
 
-DIALOG_PATH = os.getenv("PYNARRATOR_DIALOG_PATH", "./dialog")
-TRANS_DIALOG_PATH = os.getenv("PYNARRATOR_TRANS_DIALOG_PATH", "./translated_dialog")
-LANGUAGES = os.getenv("PYNARRATOR_GAME_LANGUAGES", "english,portuguese,german")
-
 
 class TranslateDialogs:
-    def __init__(self, target_language: str) -> None:
+    def __init__(self, target_language: str, source: str, target: str) -> None:
         self.source_language = "portuguese"
         self.target_language = target_language
 
@@ -22,10 +18,10 @@ class TranslateDialogs:
             source=self.source_language, target=self.target_language
         )
 
-        assert Path(DIALOG_PATH).exists()
-        self.source_dir = Path(DIALOG_PATH)
+        assert Path(source).exists()
+        self.source_dir = Path(source)
 
-        self.target_dir = Path(TRANS_DIALOG_PATH) / self.target_language
+        self.target_dir = Path(target) / self.target_language
         self.target_dir.mkdir(parents=True, exist_ok=True)
 
     def translate_dialog(self, dialog: dict) -> dict:
@@ -74,16 +70,27 @@ class TranslateDialogs:
         logging.info(f"> Done with Translation to {self.target_language}")
 
 
-def clean_dir() -> None:
-    dir = Path(TRANS_DIALOG_PATH)
+def clean_dir(dir: str) -> None:
+    dir = Path(dir)
+    dir.mkdir(parents=True, exist_ok=True)
+
     for dir in (p for p in dir.glob("*") if p.is_dir()):
         shutil.rmtree(dir)
 
 
-def main():
-    clean_dir()
-    for lang in LANGUAGES.strip('"').split(","):
-        TranslateDialogs(lang).run()
+def main(args: dict[str, str] = None):
+    if args is None:
+        languages = "english,portuguese"
+        source_dir = "dialog_dir"
+    else:
+        languages = args.languages
+        source_dir = args.dialog_dir
+    target_dir = "./translated_dialog"
+
+    clean_dir(target_dir)
+    for lang in languages.strip('"').split(","):
+        TranslateDialogs(lang, source_dir, target_dir).run()
 
 
-main()
+if __name__ == "__main__":
+    main()

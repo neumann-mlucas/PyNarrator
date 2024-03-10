@@ -10,6 +10,7 @@ python = ">=3.11,<3.13"
 pyinstaller = "^6.4.0"
 pygame = "^2.5.2"
 deep-translator = "^1.11.4"
+pdbp = "^1.5.0"
 
 
 [tool.poetry.group.dev.dependencies]
