@@ -11,6 +11,7 @@ class GameState(Enum):
     Menu = 1
     Game = 2
     LanguageMenu = 3
+    NameScreen = 4
 
 
 class BaseController:

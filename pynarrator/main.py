@@ -1,9 +1,9 @@
 import pygame
 from config import Config
 from controller import (GameController, GameState, LanguageMenuController,
-                        MenuController)
+                        MenuController, NameScreenController)
 from model import DialogFacade
-from view import GameView, LanguageMenuView, MenuView
+from view import GameView, LanguageMenuView, MenuView, NameScreenView
 
 
 def init_screen(config: Config):
@@ -31,6 +31,9 @@ def main():
     language_view = LanguageMenuView(config, model, screen)
     language_controller = LanguageMenuController(config, model, language_view)
 
+    name_screen_view = NameScreenView(config, model, screen)
+    name_screen_controller = NameScreenController(config, model, name_screen_view)
+
     game_view = GameView(config, model, screen)
     game_controller = GameController(config, model, game_view)
 
@@ -49,6 +52,8 @@ def main():
                 controller = game_controller
             elif current_state == GameState.LanguageMenu:
                 controller = language_controller
+            elif current_state == GameState.NameScreen:
+                controller = name_screen_controller
 
             # sync controler state and current_state variable
             controller.state = current_state

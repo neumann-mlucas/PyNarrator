@@ -10,8 +10,8 @@ GREY = (200, 200, 200)
 RED = (255, 0, 0)
 WHITE = (255, 255, 255)
 
-FONT_BIG = pygame.font.Font(None, 28)
-FONT_MEDIUM = pygame.font.Font(None, 24)
+FONT_BIG = pygame.font.Font(None, 30)
+FONT_MEDIUM = pygame.font.Font(None, 26)
 
 
 class BaseView:

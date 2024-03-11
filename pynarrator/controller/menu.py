@@ -28,7 +28,7 @@ class MenuController(BaseController):
     def start_game(self) -> None:
         "change game state"
         self.model.reset()
-        self.state = GameState.Game
+        self.state = GameState.NameScreen
 
     def load_game(self) -> None:
         "loads save game"
