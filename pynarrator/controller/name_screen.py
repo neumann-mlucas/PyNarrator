@@ -4,7 +4,8 @@ from typing import Callable
 
 import pygame
 from config import Config
-from controller.base import BaseController, GameState
+from controller.base import (BaseController, GameState, GameStateGame,
+                             GameStateNameScreen)
 from logger import get_logger
 from model import DialogFacade
 from pygame.event import Event
@@ -18,7 +19,7 @@ class NameScreenController(BaseController):
 
     def __init__(self, config: Config, model: DialogFacade, view: GameView) -> None:
         super().__init__(config, model, view)
-        self.state: GameState = GameState.NameScreen
+        self.state: GameState = GameStateNameScreen
         self.text = ""
 
     def handle_events(self, event: Event) -> None:
@@ -27,6 +28,8 @@ class NameScreenController(BaseController):
             if event.key == pygame.K_RETURN:
                 # TODO: capture text o a game state variable
                 logger.info(f"User Input: {self.text}")
+                self.state.vars["user_name"] = self.text
+
                 self.goto_game()
                 self.text = ""  # Clear text after enter
             elif event.key == pygame.K_BACKSPACE:
@@ -44,4 +47,4 @@ class NameScreenController(BaseController):
 
     def goto_game(self) -> None:
         "enter game"
-        self.state = GameState.Game
+        self.state = GameStateGame

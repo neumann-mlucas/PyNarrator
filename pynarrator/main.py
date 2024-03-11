@@ -1,15 +1,17 @@
 import pygame
 from config import Config
-from controller import (GameController, GameState, LanguageMenuController,
+from controller import (GameController, GameState, GameStateGame,
+                        GameStateLanguageMenu, GameStateMenu,
+                        GameStateNameScreen, LanguageMenuController,
                         MenuController, NameScreenController)
 from model import DialogFacade
 from view import GameView, LanguageMenuView, MenuView, NameScreenView
 
 CLASS_STATE_MAP = (
-    (GameState.Menu, MenuView, MenuController),
-    (GameState.LanguageMenu, LanguageMenuView, LanguageMenuController),
-    (GameState.NameScreen, NameScreenView, NameScreenController),
-    (GameState.Game, GameView, GameController),
+    (GameStateMenu, MenuView, MenuController),
+    (GameStateLanguageMenu, LanguageMenuView, LanguageMenuController),
+    (GameStateNameScreen, NameScreenView, NameScreenController),
+    (GameStateGame, GameView, GameController),
 )
 
 
@@ -40,7 +42,7 @@ def main():
 
     # Main loop
     running = True
-    current_state = GameState.Menu
+    current_state = GameStateMenu
     while running:
         events = pygame.event.get()
         for event in events:

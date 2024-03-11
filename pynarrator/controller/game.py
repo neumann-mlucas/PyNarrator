@@ -3,7 +3,8 @@ from pathlib import Path
 from typing import Callable
 
 from config import Config
-from controller.base import BaseController, GameState
+from controller.base import (BaseController, GameState, GameStateGame,
+                             GameStateMenu)
 from model import DialogFacade
 from view import GameView
 
@@ -13,7 +14,7 @@ class GameController(BaseController):
 
     def __init__(self, config: Config, model: DialogFacade, view: GameView) -> None:
         super().__init__(config, model, view)
-        self.state: GameState = GameState.Game
+        self.state: GameState = GameStateGame
 
     def update_callbacks(self) -> None:
         "sets up callbacks for each dialog option in the game view"
@@ -35,7 +36,7 @@ class GameController(BaseController):
         "save game state and go to menu"
         history = list(self.model.history)
         self.save_game(history)
-        self.state = GameState.Menu
+        self.state = GameStateMenu
 
     def save_game(self, history: list[str]) -> None:
         "save game state as a history if the nodes visited"

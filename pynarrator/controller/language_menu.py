@@ -1,7 +1,8 @@
 from typing import Callable
 
 from config import Config
-from controller.base import BaseController, GameState
+from controller.base import (BaseController, GameState, GameStateLanguageMenu,
+                             GameStateMenu)
 from model import DialogFacade
 from view import LanguageMenuView
 
@@ -13,7 +14,7 @@ class LanguageMenuController(BaseController):
         self, config: Config, model: DialogFacade, view: LanguageMenuView
     ) -> None:
         super().__init__(config, model, view)
-        self.state: GameState = GameState.LanguageMenu
+        self.state: GameState = GameStateLanguageMenu
 
     def update_callbacks(self) -> None:
         "sets up callbacks for each languages in the menu"
@@ -29,10 +30,10 @@ class LanguageMenuController(BaseController):
             self.config.language = lang
             self.model.reload_config(self.config)
             # go to menu after choosing
-            self.state: GameState = GameState.Menu
+            self.state: GameState = GameStateMenu
 
         return chose
 
     def goto_menu(self) -> None:
         "save game state and go to menu"
-        self.state = GameState.Menu
+        self.state = GameStateMenu

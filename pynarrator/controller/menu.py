@@ -4,7 +4,9 @@ from pathlib import Path
 
 import pygame
 from config import Config
-from controller.base import BaseController, GameState
+from controller.base import (BaseController, GameState, GameStateGame,
+                             GameStateLanguageMenu, GameStateMenu,
+                             GameStateNameScreen)
 from model import DialogFacade
 from view import MenuView
 
@@ -14,7 +16,7 @@ class MenuController(BaseController):
 
     def __init__(self, config: Config, model: DialogFacade, view: MenuView) -> None:
         super().__init__(config, model, view)
-        self.state: GameState = GameState.Menu
+        self.state: GameState = GameStateMenu
 
     def update_callbacks(self) -> None:
         "start, load and exit menu button callbacks"
@@ -28,11 +30,11 @@ class MenuController(BaseController):
     def start_game(self) -> None:
         "change game state"
         self.model.reset()
-        self.state = GameState.NameScreen
+        self.state = GameStateNameScreen
 
     def load_game(self) -> None:
         "loads save game"
-        self.state = GameState.Game
+        self.state = GameStateGame
 
         # check if save game exists
         path = Path(self.config.save_path) / "save.json"
@@ -48,7 +50,7 @@ class MenuController(BaseController):
 
     def chose_language(self) -> None:
         "goto language menu"
-        self.state = GameState.LanguageMenu
+        self.state = GameStateLanguageMenu
 
     def exit(self) -> None:
         "exits game"

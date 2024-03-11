@@ -1,3 +1,4 @@
+from dataclasses import dataclass, field
 from enum import Enum
 
 import pygame
@@ -7,11 +8,31 @@ from pygame.event import Event
 from view import BaseView
 
 
-class GameState(Enum):
+class GameStateEnum(Enum):
     Menu = 1
     Game = 2
     LanguageMenu = 3
     NameScreen = 4
+
+
+@dataclass
+class GameState:
+    state: GameStateEnum
+    vars: dict[str, str] = field(default_factory=dict)
+
+    def __eq__(self, other) -> bool:
+        return self.state == other.state
+
+    def __hash__(self) -> int:
+        return hash(self.state)
+
+
+_vars: dict = {}
+
+GameStateMenu = GameState(GameStateEnum.Menu, _vars)
+GameStateGame = GameState(GameStateEnum.Game, _vars)
+GameStateLanguageMenu = GameState(GameStateEnum.LanguageMenu, _vars)
+GameStateNameScreen = GameState(GameStateEnum.NameScreen, _vars)
 
 
 class BaseController:
