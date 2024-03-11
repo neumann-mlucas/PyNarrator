@@ -14,7 +14,7 @@ PyNarrator is a dialogue-based game created as a coding challenge for a job inte
 
 ## TODO
 
-- [ ] **Capture User Input**: A new view/controller class is needed. Due to time constraints, this feature was not implemented.
+- [x] **Capture User Input**: A new view/controller class is needed. Due to time constraints, this feature was not implemented.
 - [x] **Image Resolution Build Option**: Implementation would follow a similar approach to the translation hook. This feature was not completed on time.
 - [x] **CLI Interface for Build Options**: Currently relies on a makefile for build configurations.
 
