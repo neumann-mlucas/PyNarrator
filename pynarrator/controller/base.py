@@ -1,3 +1,4 @@
+from collections import defaultdict
 from dataclasses import dataclass, field
 from enum import Enum
 
@@ -27,7 +28,7 @@ class GameState:
         return hash(self.state)
 
 
-_vars: dict = {}
+_vars: dict = defaultdict(lambda: "")
 
 GameStateMenu = GameState(GameStateEnum.Menu, _vars)
 GameStateGame = GameState(GameStateEnum.Game, _vars)
